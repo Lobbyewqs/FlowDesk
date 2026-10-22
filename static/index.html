@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#16352e">
+  <title>FlowDesk · 售后工作台</title>
+  <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+  <link rel="stylesheet" href="/static/styles.css">
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+  <section id="auth-view" class="auth-screen"><div class="auth-card"><div class="auth-logo">F↗ <span>FlowDesk</span></div><div class="eyebrow">CUSTOMER OPERATIONS</div><h1 id="auth-title">登录工作空间</h1><p id="auth-description">使用你的账号查看和处理售后工单。</p><form id="auth-form"><label for="auth-username">用户名</label><input id="auth-username" autocomplete="username" pattern="[A-Za-z0-9_.@\-]{3,40}" required maxlength="40"><label for="auth-password">密码</label><input id="auth-password" type="password" autocomplete="current-password" required minlength="12" maxlength="128"><div id="confirm-wrap" class="hidden"><label for="auth-confirm">确认密码</label><input id="auth-confirm" type="password" autocomplete="new-password" maxlength="128"></div><p id="auth-error" class="auth-error" role="alert"></p><button id="auth-submit" class="button primary" type="submit">登录</button></form><p class="auth-footnote">本地工作空间 · 密码仅以加盐哈希保存<br>首次使用请创建管理员账号，随后可添加客服和客户账号。</p></div></section>
+  <div id="app-shell" class="hidden">
+  <aside class="sidebar">
+    <a class="brand" href="/" aria-label="FlowDesk 首页"><span class="brand-icon">F<span>↗</span></span><span>FlowDesk<small>售后协作工作台</small></span></a>
+    <div class="workspace"><span class="workspace-dot"></span> 演示工作空间 <span class="version">v0.2</span></div>
+    <p class="nav-label">工作空间</p>
+    <nav aria-label="主导航">
+      <button class="nav-item active" data-view="desk"><span>▤</span>工单工作台 <span id="nav-count" class="nav-count">0</span></button>
+      <button class="nav-item" data-view="policies"><span>▧</span>售后政策库</button>
+      <button class="nav-item" data-view="orders"><span>▦</span>演示订单</button>
+      <button class="nav-item hidden" data-view="jobs" data-permission="staff"><span>◷</span>后台任务</button>
+      <button class="nav-item hidden" data-view="users" data-permission="admin"><span>♧</span>账号管理</button>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="system-state"><span class="workspace-dot"></span><span id="connection-label">正在连接服务</span></div>
+      <p id="mode-description">本地运行 · SQLite 持久化</p>
+      <a href="/docs" target="_blank" rel="noreferrer">接口文档 <span>↗</span></a>
+      <div class="profile"><div class="avatar" id="profile-avatar">用</div><div id="profile-name"></div><button id="logout" class="icon-button" aria-label="退出登录">↪</button></div>
+    </div>
+  </aside>
+
+  <main>
+    <header class="topbar"><div><span class="breadcrumb">工作空间</span><span class="divider">/</span><span id="page-label">工单工作台</span></div><span class="mode-pill" id="mode-label">正在加载</span></header>
+    <div class="main-content">
+      <section class="page-heading"><div><div class="eyebrow">CUSTOMER OPERATIONS</div><h1 id="page-title">每一条诉求，都有迹可循。</h1><p id="page-subtitle">从理解问题到审核执行，让售后处理清晰、有序。</p></div><button id="new-ticket" class="button primary">＋ 新建工单</button></section>
+
+      <section id="desk-view">
+        <div class="stats" id="stats"></div>
+        <div id="queue-health" class="queue-health hidden"></div>
+        <section class="desk-grid">
+          <div class="panel queue-panel"><div class="panel-heading"><h2>工单队列</h2><button id="refresh" class="icon-button" aria-label="刷新工单">↻</button></div><div class="filters" role="group" aria-label="工单筛选"><button class="filter active" data-filter="all">全部</button><button class="filter" data-filter="pending">待处理</button><button class="filter" data-filter="done">已结束</button></div><div class="ticket-list" id="ticket-list"></div><div class="pagination"><button id="prev-page" class="icon-button" aria-label="上一页">‹</button><span id="page-info"></span><button id="next-page" class="icon-button" aria-label="下一页">›</button></div></div>
+          <div class="panel detail-panel" id="detail"><div class="empty-detail"><div class="empty-symbol">↗</div><h2>从一条工单开始</h2><p>选择左侧工单，查看处理依据与执行过程。<br>也可以新建一条示例，体验完整审批流程。</p><button class="button primary" id="empty-create">新建第一条工单</button></div></div>
+        </section>
+      </section>
+
+      <section id="policies-view" class="hidden"><div class="notice">以下为自行编写的演示政策，不代表真实商家承诺。按业务类型过滤后，通过本地 BM25 检索条款。</div><div id="policy-library" class="library-grid"></div></section>
+      <section id="orders-view" class="hidden"><div class="panel orders-panel"><div class="panel-heading"><h2>模拟订单</h2><select id="order-customer" aria-label="查看客户订单"><option value="C001">林同学 · C001</option><option value="C002">陈同学 · C002</option></select></div><p class="table-note">订单号、客户与物流均为演示数据。客户查看本人订单，客服和管理员可按客户筛选。</p><div class="table-wrap"><table><thead><tr><th>订单</th><th>商品</th><th>金额</th><th>状态</th><th>物流记录</th></tr></thead><tbody id="orders-table"></tbody></table></div></div></section>
+      <section id="jobs-view" class="hidden"><div class="notice">任务先持久化再处理。后台执行期间可离开页面；失败任务最多自动尝试三次，之后可由客服手动重试。</div><div class="panel"><div class="panel-heading"><h2 id="job-summary">后台任务</h2><button id="seed-batch" class="button small hidden" data-permission="admin">添加 200 条演示工单</button></div><div class="table-wrap"><table><thead><tr><th>任务 / 工单</th><th>操作</th><th>状态</th><th>尝试次数</th><th>处理说明</th></tr></thead><tbody id="jobs-table"></tbody></table></div></div></section>
+      <section id="users-view" class="hidden"><div class="notice">客户账号绑定客户编号后，仅能查看、提交及补充自己的工单；客服可审核和重试；管理员可管理账号及导入演示数据。</div><div class="panel user-form-panel"><h2>创建账号</h2><form id="user-form" class="user-form"><div><label for="user-username">用户名</label><input id="user-username" required pattern="[A-Za-z0-9_.@\-]{3,40}" maxlength="40" autocomplete="off"></div><div><label for="user-password">初始密码（至少 12 位）</label><input id="user-password" type="password" required minlength="12" maxlength="128" autocomplete="new-password"></div><div><label for="user-role">角色</label><select id="user-role"><option value="agent">客服</option><option value="customer">客户</option><option value="admin">管理员</option></select></div><div><label for="user-customer">客户绑定</label><select id="user-customer"><option value="C001">林同学 · C001</option><option value="C002">陈同学 · C002</option></select></div><button class="button primary" type="submit">创建账号</button></form></div><div class="panel"><div class="table-wrap"><table><thead><tr><th>用户名</th><th>角色</th><th>客户编号</th><th>状态</th><th>操作</th></tr></thead><tbody id="users-table"></tbody></table></div></div></section>
+
+      <footer>FlowDesk <span>·</span> 本地演示环境 <span>·</span> 售后操作均为模拟，回复不会发送给真实客户。</footer>
+    </div>
+  </main>
+  </div>
+
+  <dialog id="create-dialog"><form id="create-form"><div class="dialog-heading"><div><span class="eyebrow">NEW TICKET</span><h2>创建售后工单</h2></div><button type="button" id="close-dialog" class="icon-button" aria-label="关闭">×</button></div><label for="customer">演示客户</label><select id="customer" name="customer_id"><option value="C001">林同学 · C001</option><option value="C002">陈同学 · C002</option></select><label for="description">客户问题</label><textarea id="description" name="description" rows="5" required minlength="2" maxlength="3000" placeholder="例如：订单 A1024 的耳机左耳没声音，我想换货。"></textarea><p class="field-hint">可以只填写问题，系统会在缺少订单号时请求补充。</p><div class="sample-label">试试这些场景</div><div class="sample-buttons"><button type="button" data-sample="exchange">耳机换货</button><button type="button" data-sample="logistics">物流查询</button><button type="button" data-sample="expired">超期退货</button><button type="button" data-sample="missing">信息缺失</button><button type="button" data-sample="return">支架退货</button></div><div class="dialog-bottom"><span>提交后自动运行至需要人工输入的步骤</span><button type="submit" class="button primary" id="submit-ticket">提交并处理 ↗</button></div></form></dialog>
+  <div id="toast" role="status" class="toast hidden"></div>
+  <div id="busy" class="busy hidden" role="status"><span class="spinner"></span><span>正在提交操作…</span></div>
+</body>
+</html>
+

@@ -1,0 +1,27 @@
+[
+  {"text":"订单 A1024 耳机左耳没声音，申请换货","intent":"exchange","status":"awaiting_approval","policy":"P-EXC-01"},
+  {"text":"A1024 耳机坏了，帮我更换","intent":"exchange","status":"awaiting_approval","policy":"P-EXC-01"},
+  {"text":"A1028 支架损坏了想换一个","intent":"exchange","status":"awaiting_approval","policy":"P-EXC-01"},
+  {"text":"A1024 商品有故障，希望换货","intent":"exchange","status":"awaiting_approval","policy":"P-EXC-01"},
+  {"text":"耳机坏了，希望换货","intent":"exchange","status":"needs_info","policy":null},
+  {"text":"A1024 耳机不想要了，申请退货","intent":"return","status":"awaiting_approval","policy":"P-RET-01"},
+  {"text":"A1028 支架想退款","intent":"return","status":"awaiting_approval","policy":"P-RET-01"},
+  {"text":"订单 A1028 不想要了，请帮忙处理","intent":"return","status":"awaiting_approval","policy":"P-RET-01"},
+  {"text":"A1024 请帮我退钱","intent":"return","status":"awaiting_approval","policy":"P-RET-01"},
+  {"text":"我想退货，但不记得订单号","intent":"return","status":"needs_info","policy":null},
+  {"text":"A1025 快递到哪里了","intent":"logistics","status":"awaiting_approval","policy":"P-LOG-01"},
+  {"text":"A1025 还没收到，查一下物流","intent":"logistics","status":"awaiting_approval","policy":"P-LOG-01"},
+  {"text":"A1024 运输记录是什么","intent":"logistics","status":"awaiting_approval","policy":"P-LOG-01"},
+  {"text":"订单 A1025 什么时候到货","intent":"logistics","status":"awaiting_approval","policy":"P-LOG-01"},
+  {"text":"我的快递到哪了","intent":"logistics","status":"needs_info","policy":null},
+  {"text":"A1026 音箱不想要了，我要退货","intent":"return","status":"manual","policy":"P-RET-01"},
+  {"text":"A1026 音箱坏了，希望换货","intent":"exchange","status":"manual","policy":"P-EXC-01"},
+  {"text":"A1027 手表申请换货","intent":"exchange","status":"manual","policy":"P-EXC-01"},
+  {"text":"A9999 商品申请退货","intent":"return","status":"manual","policy":"P-RET-01"},
+  {"text":"A1025 键盘申请退货","intent":"return","status":"manual","policy":"P-RET-01"},
+  {"text":"A1024 请帮我开发票","intent":"other","status":"manual","policy":null},
+  {"text":"A1024 修改收货地址","intent":"other","status":"manual","policy":null},
+  {"text":"A1024 不要退货，我要换货","intent":"exchange","status":"awaiting_approval","policy":"P-EXC-01"},
+  {"text":"A1024 想退回这件商品","intent":"return","status":"awaiting_approval","policy":"P-RET-01"}
+]
+
